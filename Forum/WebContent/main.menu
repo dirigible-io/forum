@@ -1,0 +1,27 @@
+[
+    {
+        "name": "Home",
+        "link": "index.html",
+        "subMenu": []
+    },
+    {
+        "name": "Users",
+        "link": "forum_users.html",
+        "subMenu": []
+    },
+    {
+        "name": "Categories",
+        "link": "forum_categories.html",
+        "subMenu": []
+    },
+    {
+        "name": "Threads",
+        "link": "forum_threads.html",
+        "subMenu": []
+    },
+    {
+        "name": "Posts",
+        "link": "forum_posts.html",
+        "subMenu": []
+    }
+]
