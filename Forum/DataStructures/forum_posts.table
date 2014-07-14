@@ -12,18 +12,18 @@
       }
       ,
       {
-        "name":"POST_TITLE",
+        "name":"POST_CONTENT",
         "type":"VARCHAR",
-        "length":"128",
+        "length":"1024",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
       }
       ,
       {
-        "name":"POST_DESCRIPTION",
-        "type":"CHAR",
-        "length":"255",
+        "name":"POST_BY",
+        "type":"INTEGER",
+        "length":"0",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
@@ -39,17 +39,8 @@
       }
       ,
       {
-        "name":"POST_CATEGORY",
-        "type":"INTEGER",
-        "length":"0",
-        "notNull":"true",
-        "primaryKey":"false",
-        "defaultValue":""
-      }
-      ,
-      {
-        "name":"POST_DATE_CREATED",
-        "type":"DATE",
+        "name":"POST_DATE_ADDED",
+        "type":"TIMESTAMP",
         "length":"0",
         "notNull":"true",
         "primaryKey":"false",

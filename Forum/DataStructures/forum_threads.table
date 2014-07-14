@@ -23,7 +23,16 @@
       {
         "name":"THREAD_DESCRIPTION",
         "type":"VARCHAR",
-        "length":"255",
+        "length":"1024",
+        "notNull":"true",
+        "primaryKey":"false",
+        "defaultValue":""
+      }
+      ,
+      {
+        "name":"THREAD_BY",
+        "type":"INTEGER",
+        "length":"0",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
@@ -39,8 +48,8 @@
       }
       ,
       {
-        "name":"THREAD_DATE_CREATED",
-        "type":"DATE",
+        "name":"THREAD_DATE_ADDED",
+        "type":"TIMESTAMP",
         "length":"0",
         "notNull":"true",
         "primaryKey":"false",

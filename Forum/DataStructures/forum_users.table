@@ -12,9 +12,9 @@
       }
       ,
       {
-        "name":"USER_NICKNAME",
+        "name":"USER_NAME",
         "type":"VARCHAR",
-        "length":"16",
+        "length":"50",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
@@ -23,7 +23,7 @@
       {
         "name":"USER_PASSWORD",
         "type":"VARCHAR",
-        "length":"128",
+        "length":"50",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
@@ -50,7 +50,7 @@
       {
         "name":"USER_EMAIL",
         "type":"VARCHAR",
-        "length":"128",
+        "length":"50",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
@@ -58,7 +58,7 @@
       ,
       {
         "name":"USER_JOINDATE",
-        "type":"DATE",
+        "type":"TIMESTAMP",
         "length":"0",
         "notNull":"true",
         "primaryKey":"false",

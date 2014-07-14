@@ -11,18 +11,14 @@ exports.createForum_posts = function() {
         var sql = "INSERT INTO FORUM_POSTS (";
         sql += "POST_ID";
         sql += ",";
-        sql += "POST_TITLE";
+        sql += "POST_CONTENT";
         sql += ",";
-        sql += "POST_DESCRIPTION";
+        sql += "POST_BY";
         sql += ",";
         sql += "POST_THREAD";
         sql += ",";
-        sql += "POST_CATEGORY";
-        sql += ",";
-        sql += "POST_DATE_CREATED";
+        sql += "POST_DATE_ADDED";
         sql += ") VALUES ("; 
-        sql += "?";
-        sql += ",";
         sql += "?";
         sql += ",";
         sql += "?";
@@ -38,12 +34,11 @@ exports.createForum_posts = function() {
         var i = 0;
         var id = db.getNext('FORUM_POSTS_POST_ID');
         statement.setInt(++i, id);
-        statement.setString(++i, message.post_title);
-        statement.setString(++i, message.post_description);
+        statement.setString(++i, message.post_content);
+        statement.setInt(++i, message.post_by);
         statement.setInt(++i, message.post_thread);
-        statement.setInt(++i, message.post_category);
-        var js_date_post_date_created =  new Date(Date.parse(message.post_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_post_date_created.getTime() + js_date_post_date_created.getTimezoneOffset()*60*1000));
+        var js_date_post_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_post_date_added.getTime() + js_date_post_date_added.getTimezoneOffset()*60*1000));
         statement.executeUpdate();
         response.getWriter().println(id);
         return id;
@@ -92,7 +87,7 @@ exports.readForum_postsList = function(limit, offset, sort, desc) {
         if (limit !== null && offset !== null) {
             sql += " " + db.createTopAndStart(limit, offset);
         }
-        sql += " * FROM FORUM_POSTS";
+        sql += " forum_posts.*, forum_threads.thread_title, forum_users.user_name from forum_posts, forum_threads, forum_users where forum_posts.post_by = forum_users.user_id and forum_posts.post_thread = forum_threads.thread_id";
         if (sort !== null) {
             sql += " ORDER BY " + sort;
         }
@@ -122,11 +117,12 @@ exports.readForum_postsList = function(limit, offset, sort, desc) {
 function createEntity(resultSet, data) {
     var result = {};
 	result.post_id = resultSet.getInt("POST_ID");
-    result.post_title = resultSet.getString("POST_TITLE");
-    result.post_description = resultSet.getString("POST_DESCRIPTION");
+    result.post_content = resultSet.getString("POST_CONTENT");
+	result.post_by = resultSet.getInt("POST_BY");
 	result.post_thread = resultSet.getInt("POST_THREAD");
-	result.post_category = resultSet.getInt("POST_CATEGORY");
-    result.post_date_created = new Date(resultSet.getDate("POST_DATE_CREATED").getTime() - resultSet.getDate("POST_DATE_CREATED").getTimezoneOffset()*60*1000);
+    result.post_date_added = new Date(resultSet.getTimestamp("POST_DATE_ADDED").getTime() - resultSet.getDate("POST_DATE_ADDED").getTimezoneOffset()*60*1000);
+    result.thread_title = resultSet.getString("THREAD_TITLE");
+    result.user_name = resultSet.getString("USER_NAME");
     return result;
 };
 
@@ -137,24 +133,21 @@ exports.updateForum_posts = function() {
     var connection = datasource.getConnection();
     try {
         var sql = "UPDATE FORUM_POSTS SET ";
-        sql += "POST_TITLE = ?";
+        sql += "POST_CONTENT = ?";
         sql += ",";
-        sql += "POST_DESCRIPTION = ?";
+        sql += "POST_BY = ?";
         sql += ",";
         sql += "POST_THREAD = ?";
         sql += ",";
-        sql += "POST_CATEGORY = ?";
-        sql += ",";
-        sql += "POST_DATE_CREATED = ?";
+        sql += "POST_DATE_ADDED = ?";
         sql += " WHERE POST_ID = ?";
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        statement.setString(++i, message.post_title);
-        statement.setString(++i, message.post_description);
+        statement.setString(++i, message.post_content);
+        statement.setInt(++i, message.post_by);
         statement.setInt(++i, message.post_thread);
-        statement.setInt(++i, message.post_category);
-        var js_date =  new Date(Date.parse(message.post_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_post_date_created.getTime() + js_date_post_date_created.getTimezoneOffset()*60*1000));
+        var js_date_post_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_post_date_added.getTime() + js_date_post_date_added.getTimezoneOffset()*60*1000));
         var id = "";
         id = message.post_id;
         statement.setInt(++i, id);
@@ -216,30 +209,25 @@ exports.metadataForum_posts = function() {
 	propertypost_id.required = 'true';
     entityMetadata.properties.push(propertypost_id);
 
-	var propertypost_title = {};
-	propertypost_title.name = 'post_title';
-    propertypost_title.type = 'string';
-    entityMetadata.properties.push(propertypost_title);
+	var propertypost_content = {};
+	propertypost_content.name = 'post_content';
+    propertypost_content.type = 'string';
+    entityMetadata.properties.push(propertypost_content);
 
-	var propertypost_description = {};
-	propertypost_description.name = 'post_description';
-	propertypost_description.type = 'string';
-    entityMetadata.properties.push(propertypost_description);
+	var propertypost_by = {};
+	propertypost_by.name = 'post_by';
+	propertypost_by.type = 'integer';
+    entityMetadata.properties.push(propertypost_by);
 
 	var propertypost_thread = {};
 	propertypost_thread.name = 'post_thread';
 	propertypost_thread.type = 'integer';
     entityMetadata.properties.push(propertypost_thread);
 
-	var propertypost_category = {};
-	propertypost_category.name = 'post_category';
-	propertypost_category.type = 'integer';
-    entityMetadata.properties.push(propertypost_category);
-
-	var propertypost_date_created = {};
-	propertypost_date_created.name = 'post_date_created';
-    propertypost_date_created.type = 'date';
-    entityMetadata.properties.push(propertypost_date_created);
+	var propertypost_date_added = {};
+	propertypost_date_added.name = 'post_date_added';
+    propertypost_date_added.type = 'timestamp';
+    entityMetadata.properties.push(propertypost_date_added);
 
 
     response.getWriter().println(JSON.stringify(entityMetadata));

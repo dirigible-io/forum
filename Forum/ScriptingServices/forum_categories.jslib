@@ -15,7 +15,7 @@ exports.createForum_categories = function() {
         sql += ",";
         sql += "CATEGORY_DESCRIPTION";
         sql += ",";
-        sql += "CATEGORY_DATE_CREATED";
+        sql += "CATEGORY_DATE_ADDED";
         sql += ") VALUES ("; 
         sql += "?";
         sql += ",";
@@ -32,8 +32,8 @@ exports.createForum_categories = function() {
         statement.setInt(++i, id);
         statement.setString(++i, message.category_title);
         statement.setString(++i, message.category_description);
-        var js_date_category_date_created =  new Date(Date.parse(message.category_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_category_date_created.getTime() + js_date_category_date_created.getTimezoneOffset()*60*1000));
+        var js_date_category_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_category_date_added.getTime() + js_date_category_date_added.getTimezoneOffset()*60*1000));
         statement.executeUpdate();
         response.getWriter().println(id);
         return id;
@@ -114,7 +114,7 @@ function createEntity(resultSet, data) {
 	result.category_id = resultSet.getInt("CATEGORY_ID");
     result.category_title = resultSet.getString("CATEGORY_TITLE");
     result.category_description = resultSet.getString("CATEGORY_DESCRIPTION");
-    result.category_date_created = new Date(resultSet.getDate("CATEGORY_DATE_CREATED").getTime() - resultSet.getDate("CATEGORY_DATE_CREATED").getTimezoneOffset()*60*1000);
+    result.category_date_added = new Date(resultSet.getTimestamp("CATEGORY_DATE_ADDED").getTime() - resultSet.getDate("CATEGORY_DATE_ADDED").getTimezoneOffset()*60*1000);
     return result;
 };
 
@@ -129,14 +129,14 @@ exports.updateForum_categories = function() {
         sql += ",";
         sql += "CATEGORY_DESCRIPTION = ?";
         sql += ",";
-        sql += "CATEGORY_DATE_CREATED = ?";
+        sql += "CATEGORY_DATE_ADDED = ?";
         sql += " WHERE CATEGORY_ID = ?";
         var statement = connection.prepareStatement(sql);
         var i = 0;
         statement.setString(++i, message.category_title);
         statement.setString(++i, message.category_description);
-        var js_date =  new Date(Date.parse(message.category_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_category_date_created.getTime() + js_date_category_date_created.getTimezoneOffset()*60*1000));
+        var js_date_category_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_category_date_added.getTime() + js_date_category_date_added.getTimezoneOffset()*60*1000));
         var id = "";
         id = message.category_id;
         statement.setInt(++i, id);
@@ -208,10 +208,10 @@ exports.metadataForum_categories = function() {
     propertycategory_description.type = 'string';
     entityMetadata.properties.push(propertycategory_description);
 
-	var propertycategory_date_created = {};
-	propertycategory_date_created.name = 'category_date_created';
-    propertycategory_date_created.type = 'date';
-    entityMetadata.properties.push(propertycategory_date_created);
+	var propertycategory_date_added = {};
+	propertycategory_date_added.name = 'category_date_added';
+    propertycategory_date_added.type = 'timestamp';
+    entityMetadata.properties.push(propertycategory_date_added);
 
 
     response.getWriter().println(JSON.stringify(entityMetadata));

@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>Users</title>
+<title>Forum Users</title>
 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -27,7 +27,7 @@
 				<thead>
 					<tr>
 						<th>user_id</th>
-						<th>user_nickname</th>
+						<th>user_name</th>
 						<th>user_password</th>
 						<th>user_firstname</th>
 						<th>user_lastname</th>
@@ -39,7 +39,7 @@
 					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
 						ng-click="showInfoForEntry(entry)">
 						<td>{{entry.user_id}}</td> 
-						<td>{{entry.user_nickname}}</td> 
+						<td>{{entry.user_name}}</td> 
 						<td>{{entry.user_password}}</td> 
 						<td>{{entry.user_firstname}}</td> 
 						<td>{{entry.user_lastname}}</td> 
@@ -63,43 +63,13 @@
 			</div>
 			<br> <br>
 			<div>
-				<div ng-show="operation == 'show'">
-					<label>user_id</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_id" readonly>
-					<br> 
-					<label>user_nickname</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_nickname" readonly>
-					<br> 
-					<label>user_password</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_password" readonly>
-					<br> 
-					<label>user_firstname</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_firstname" readonly>
-					<br> 
-					<label>user_lastname</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_lastname" readonly>
-					<br> 
-					<label>user_email</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_email" readonly>
-					<br> 
-					<label>user_joindate</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_joindate" readonly>
-					<br> 
-				</div>
 				<div ng-show="operation == 'new'">
 					<label>user_id</label> 
 					<input type="text"
 						class="form-control" value="Auto Generated" readonly> <br>
-					<label>user_nickname</label> 
+					<label>user_name</label> 
 					<input type="text" class="form-control" 
-						ng-model="newEntry.user_nickname">
+						ng-model="newEntry.user_name">
 					<br>
 					<label>user_password</label> 
 					<input type="text" class="form-control" 
@@ -127,9 +97,9 @@
 					<input type="text" class="form-control" 
 						ng-model="selectedEntry.user_id" readonly>
 					<br> 
-					<label>user_nickname</label> 
+					<label>user_name</label> 
 					<input type="text" class="form-control"
-						ng-model="selectedEntry.user_nickname"> 
+						ng-model="selectedEntry.user_name"> 
 					<br>
 					<label>user_password</label> 
 					<input type="text" class="form-control"

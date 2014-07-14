@@ -11,7 +11,7 @@ exports.createForum_users = function() {
         var sql = "INSERT INTO FORUM_USERS (";
         sql += "USER_ID";
         sql += ",";
-        sql += "USER_NICKNAME";
+        sql += "USER_NAME";
         sql += ",";
         sql += "USER_PASSWORD";
         sql += ",";
@@ -42,13 +42,13 @@ exports.createForum_users = function() {
         var i = 0;
         var id = db.getNext('FORUM_USERS_USER_ID');
         statement.setInt(++i, id);
-        statement.setString(++i, message.user_nickname);
+        statement.setString(++i, message.user_name);
         statement.setString(++i, message.user_password);
         statement.setString(++i, message.user_firstname);
         statement.setString(++i, message.user_lastname);
         statement.setString(++i, message.user_email);
         var js_date_user_joindate =  new Date(Date.parse(message.user_joindate));
-        statement.setDate(++i, new java.sql.Date(js_date_user_joindate.getTime() + js_date_user_joindate.getTimezoneOffset()*60*1000));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_user_joindate.getTime() + js_date_user_joindate.getTimezoneOffset()*60*1000));
         statement.executeUpdate();
         response.getWriter().println(id);
         return id;
@@ -127,12 +127,12 @@ exports.readForum_usersList = function(limit, offset, sort, desc) {
 function createEntity(resultSet, data) {
     var result = {};
 	result.user_id = resultSet.getInt("USER_ID");
-    result.user_nickname = resultSet.getString("USER_NICKNAME");
+    result.user_name = resultSet.getString("USER_NAME");
     result.user_password = resultSet.getString("USER_PASSWORD");
     result.user_firstname = resultSet.getString("USER_FIRSTNAME");
     result.user_lastname = resultSet.getString("USER_LASTNAME");
     result.user_email = resultSet.getString("USER_EMAIL");
-    result.user_joindate = new Date(resultSet.getDate("USER_JOINDATE").getTime() - resultSet.getDate("USER_JOINDATE").getTimezoneOffset()*60*1000);
+    result.user_joindate = new Date(resultSet.getTimestamp("USER_JOINDATE").getTime() - resultSet.getDate("USER_JOINDATE").getTimezoneOffset()*60*1000);
     return result;
 };
 
@@ -143,7 +143,7 @@ exports.updateForum_users = function() {
     var connection = datasource.getConnection();
     try {
         var sql = "UPDATE FORUM_USERS SET ";
-        sql += "USER_NICKNAME = ?";
+        sql += "USER_NAME = ?";
         sql += ",";
         sql += "USER_PASSWORD = ?";
         sql += ",";
@@ -157,13 +157,13 @@ exports.updateForum_users = function() {
         sql += " WHERE USER_ID = ?";
         var statement = connection.prepareStatement(sql);
         var i = 0;
-        statement.setString(++i, message.user_nickname);
+        statement.setString(++i, message.user_name);
         statement.setString(++i, message.user_password);
         statement.setString(++i, message.user_firstname);
         statement.setString(++i, message.user_lastname);
         statement.setString(++i, message.user_email);
-        var js_date =  new Date(Date.parse(message.user_joindate));
-        statement.setDate(++i, new java.sql.Date(js_date_user_joindate.getTime() + js_date_user_joindate.getTimezoneOffset()*60*1000));
+        var js_date_user_joindate =  new Date(Date.parse(message.user_joindate));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_user_joindate.getTime() + js_date_user_joindate.getTimezoneOffset()*60*1000));
         var id = "";
         id = message.user_id;
         statement.setInt(++i, id);
@@ -225,10 +225,10 @@ exports.metadataForum_users = function() {
 	propertyuser_id.required = 'true';
     entityMetadata.properties.push(propertyuser_id);
 
-	var propertyuser_nickname = {};
-	propertyuser_nickname.name = 'user_nickname';
-    propertyuser_nickname.type = 'string';
-    entityMetadata.properties.push(propertyuser_nickname);
+	var propertyuser_name = {};
+	propertyuser_name.name = 'user_name';
+    propertyuser_name.type = 'string';
+    entityMetadata.properties.push(propertyuser_name);
 
 	var propertyuser_password = {};
 	propertyuser_password.name = 'user_password';
@@ -252,7 +252,7 @@ exports.metadataForum_users = function() {
 
 	var propertyuser_joindate = {};
 	propertyuser_joindate.name = 'user_joindate';
-    propertyuser_joindate.type = 'date';
+    propertyuser_joindate.type = 'timestamp';
     entityMetadata.properties.push(propertyuser_joindate);
 
 

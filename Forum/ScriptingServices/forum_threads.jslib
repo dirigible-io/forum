@@ -15,10 +15,14 @@ exports.createForum_threads = function() {
         sql += ",";
         sql += "THREAD_DESCRIPTION";
         sql += ",";
+        sql += "THREAD_BY";
+        sql += ",";
         sql += "THREAD_CATEGORY";
         sql += ",";
-        sql += "THREAD_DATE_CREATED";
+        sql += "THREAD_DATE_ADDED";
         sql += ") VALUES ("; 
+        sql += "?";
+        sql += ",";
         sql += "?";
         sql += ",";
         sql += "?";
@@ -36,9 +40,10 @@ exports.createForum_threads = function() {
         statement.setInt(++i, id);
         statement.setString(++i, message.thread_title);
         statement.setString(++i, message.thread_description);
+        statement.setInt(++i, message.thread_by);
         statement.setInt(++i, message.thread_category);
-        var js_date_thread_date_created =  new Date(Date.parse(message.thread_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_thread_date_created.getTime() + js_date_thread_date_created.getTimezoneOffset()*60*1000));
+        var js_date_thread_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_thread_date_added.getTime() + js_date_thread_date_added.getTimezoneOffset()*60*1000));
         statement.executeUpdate();
         response.getWriter().println(id);
         return id;
@@ -83,11 +88,12 @@ exports.readForum_threadsList = function(limit, offset, sort, desc) {
     var connection = datasource.getConnection();
     try {
         var result = [];
+        
         var sql = "SELECT ";
         if (limit !== null && offset !== null) {
             sql += " " + db.createTopAndStart(limit, offset);
         }
-        sql += " * FROM FORUM_THREADS";
+        sql += " forum_threads.*, forum_categories.category_title, forum_users.user_name FROM FORUM_THREADS, forum_categories, forum_users where forum_threads.thread_category = forum_categories.category_id and forum_threads.thread_by = forum_users.user_id";
         if (sort !== null) {
             sql += " ORDER BY " + sort;
         }
@@ -119,8 +125,11 @@ function createEntity(resultSet, data) {
 	result.thread_id = resultSet.getInt("THREAD_ID");
     result.thread_title = resultSet.getString("THREAD_TITLE");
     result.thread_description = resultSet.getString("THREAD_DESCRIPTION");
+	result.thread_by = resultSet.getInt("THREAD_BY");
 	result.thread_category = resultSet.getInt("THREAD_CATEGORY");
-    result.thread_date_created = new Date(resultSet.getDate("THREAD_DATE_CREATED").getTime() - resultSet.getDate("THREAD_DATE_CREATED").getTimezoneOffset()*60*1000);
+    result.thread_date_added = new Date(resultSet.getTimestamp("THREAD_DATE_ADDED").getTime() - resultSet.getDate("THREAD_DATE_ADDED").getTimezoneOffset()*60*1000);
+    result.category_title = resultSet.getString("CATEGORY_TITLE");
+    result.user_name = resultSet.getString("USER_NAME");
     return result;
 };
 
@@ -135,17 +144,24 @@ exports.updateForum_threads = function() {
         sql += ",";
         sql += "THREAD_DESCRIPTION = ?";
         sql += ",";
+        sql += "THREAD_BY = ?";
+        sql += ",";
         sql += "THREAD_CATEGORY = ?";
         sql += ",";
-        sql += "THREAD_DATE_CREATED = ?";
+        sql += "THREAD_DATE_ADDED = ?";
+        sql += ",";
+        sql += "CATEGORY_NAME = ?";
+        sql += ",";
+        sql += "USER_NAME";
         sql += " WHERE THREAD_ID = ?";
         var statement = connection.prepareStatement(sql);
         var i = 0;
         statement.setString(++i, message.thread_title);
         statement.setString(++i, message.thread_description);
+        statement.setInt(++i, message.thread_by);
         statement.setInt(++i, message.thread_category);
-        var js_date =  new Date(Date.parse(message.thread_date_created));
-        statement.setDate(++i, new java.sql.Date(js_date_thread_date_created.getTime() + js_date_thread_date_created.getTimezoneOffset()*60*1000));
+        var js_date_thread_date_added =  new Date(Date.parse(Date()));
+        statement.setTimestamp(++i, new java.sql.Timestamp(js_date_thread_date_added.getTime() + js_date_thread_date_added.getTimezoneOffset()*60*1000));
         var id = "";
         id = message.thread_id;
         statement.setInt(++i, id);
@@ -217,16 +233,20 @@ exports.metadataForum_threads = function() {
     propertythread_description.type = 'string';
     entityMetadata.properties.push(propertythread_description);
 
+	var propertythread_by = {};
+	propertythread_by.name = 'thread_by';
+	propertythread_by.type = 'integer';
+    entityMetadata.properties.push(propertythread_by);
+
 	var propertythread_category = {};
 	propertythread_category.name = 'thread_category';
 	propertythread_category.type = 'integer';
     entityMetadata.properties.push(propertythread_category);
 
-	var propertythread_date_created = {};
-	propertythread_date_created.name = 'thread_date_created';
-    propertythread_date_created.type = 'date';
-    entityMetadata.properties.push(propertythread_date_created);
-
+	var propertythread_date_added = {};
+	propertythread_date_added.name = 'thread_date_added';
+    propertythread_date_added.type = 'timestamp';
+    entityMetadata.properties.push(propertythread_date_added);
 
     response.getWriter().println(JSON.stringify(entityMetadata));
 };
@@ -272,7 +292,7 @@ exports.processForum_threads = function() {
 	
 	if (limit === null) {
 		limit = 100;
-	}
+    }
 	if (offset === null) {
 		offset = 0;
 	}

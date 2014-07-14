@@ -10,138 +10,189 @@
 <title>Posts</title>
 
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
 <style>
-.selected-true {
-	background-color: #428bca;
-	color: white;
+.panel {
+    overflow: hidden;
 }
-</style>
+
+#wrap {
+    background-color: #EEEEEE;   
+}
+    .selected-true .panel-heading, .selected-true .panel-footer {
+        color: white;
+        background-color: #D9534F
+    }
+    
+    .blog-sidebar {
+    width: 200px;
+    float: right;
+    border-radius: 5px;
+    border: 3px solid rgba(0, 0, 0, 0.6);
+    padding: 0;
+}
+
+.blog-sidebar h4 {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    margin-top: 0px;
+}
+
+.blog-sidebar h4 a {
+    color: white;
+}
+
+.blog-sidebar ol {
+    margin-left: 10px;
+}
+
+.blog-sidebar ol li a {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: bold;
+}
+
+.blog-sidebar-threads {
+    float: right;
+    clear: both;
+    width: 200px;
+    border: 3px solid #428bca;
+    margin-top: 20px;
+    border-radius: 5px;
+    padding: 0;
+}
+
+.blog-sidebar-threads h4 {
+    background-color: #428bca;
+    padding: 10px;
+    margin-top: 0;
+}
+
+.blog-sidebar-threads h4 a {
+    color: white;
+}
+
+.blog-sidebar-threads ol {
+    margin-left: 10px;
+}
+
+.blog-sidebar-threads ol li a {
+    color: #428bca;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 52%;
+    display: inline-block;
+    resize: none;
+}
+
+label {
+    width: 200px;
+    background-color: #F5F5F5;
+    padding: 6px;
+    border-radius: 3px;
+}
+
+.desc {
+    background-color: white;
+    color: black;
+    vertical-align: top;
+}
+
+</style>    
 </head>
 <body>
-	<div id="wrap" ng-app ng-controller="ManageController">
+	<div id="wrap" ng-app ng-controller="ManageControllerPosts">
 		<div class="container">
+        <div class="alert alert-danger" ng-show="errorMessage">
+                {{errorMessage}}</div>
+            <div ng-controller="ManageControllerCategories">
+        	<div class="col-sm-3 blog-sidebar">
+                <div class="sidebar-module">
+                    <h4><a href="https://dirigiblep1940736303trial.hanatrial.ondemand.com/dirigible/web-sandbox/Forum/forum_categories.html">Categories</a></h4>
+                     <ol class="list-unstyled">
+                     <li class="selected-{{category_entry._selected_}}" ng-repeat="category_entry in data"
+        				ng-click="showInfoForcategory_entry(category_entry)"><a href="#">{{category_entry.category_title}}</a></li>
+                    </ol>
+                </div>
+            </div><!-- /.blog-sidebar -->
+            </div>
+            <div ng-controller="ManageControllerThreads">
+            <div class="col-sm-3 blog-sidebar-threads">
+                <div class="sidebar-module">
+                    <h4><a href="https://dirigiblep1940736303trial.hanatrial.ondemand.com/dirigible/web-sandbox/Forum/forum_threads.html">Threads</a></h4>
+                     <ol class="list-unstyled">
+                     <li class="selected-{{thread_entry._selected_}}" ng-repeat="thread_entry in data"
+            			ng-click="showInfoForthread_entry(thread_entry)"><a href="#">{{thread_entry.thread_title}}</a></li>
+                    </ol>
+                </div> 
+            </div>
+            </div>
 			<div class="alert alert-danger" ng-show="errorMessage">
 				{{errorMessage}}</div>
-			<table class="table table-condensed">
-				<thead>
-					<tr>
-						<th>post_id</th>
-						<th>post_title</th>
-						<th>post_description</th>
-						<th>post_thread</th>
-						<th>post_category</th>
-						<th>post_date_created</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="selected-{{entry._selected_}}" ng-repeat="entry in data"
-						ng-click="showInfoForEntry(entry)">
-						<td>{{entry.post_id}}</td> 
-						<td>{{entry.post_title}}</td> 
-						<td>{{entry.post_description}}</td> 
-						<td>{{entry.post_thread}}</td> 
-						<td>{{entry.post_category}}</td> 
-						<td>{{entry.post_date_created}}</td> 
-					</tr>
-				</tbody>
-			</table>
+			<div class="selected-{{post_entry._selected_}}" ng-repeat="post_entry in data"
+            		ng-click="showInfoForpost_entry(post_entry)" style="width: 70%">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 2em;">
+                        <p><span style="font-weight: bold;">RE: </span>{{post_entry.thread_title}}</p>
+                    </div>
+                    <div class="panel-body">
+                            {{post_entry.post_content}}
+                    </div>
+                    <div class="panel-footer">
+                        <p><span style="font-weight: bold;">Posted by: </span>{{post_entry.user_name}}</p>
+                        <p><span style="font-weight: bold;">Posted on: </span>{{post_entry.post_date_added | date:'medium'}}</p>
+                    </div>
+                </div>
+			</div>
 			<hr>
 			<br>
 			<div class="btn-group">
 				<input class="btn btn-default" type="button" value="New"
 					ng-click="setOperation('new')"
 					ng-disabled="errorMessage || operation == 'update'"> <input
-					class="btn btn-default" type="button" value="Edit"
+					class="btn btn-warning" type="button" value="Edit"
 					ng-click="setOperation('update')"
 					ng-disabled="errorMessage || operation == 'new'"> <input
-					class="btn btn-default" type="button" value="Delete"
+					class="btn btn-danger" type="button" value="Delete"
 					ng-click="delete()"
 					ng-disabled="errorMessage || operation == 'new' || operation == 'update'">
 			</div>
 			<br> <br>
 			<div>
-				<div ng-show="operation == 'show'">
-					<label>post_id</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_id" readonly>
-					<br> 
-					<label>post_title</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_title" readonly>
-					<br> 
-					<label>post_description</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_description" readonly>
-					<br> 
-					<label>post_thread</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_thread" readonly>
-					<br> 
-					<label>post_category</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_category" readonly>
-					<br> 
-					<label>post_date_created</label>
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_date_created" readonly>
-					<br> 
-				</div>
 				<div ng-show="operation == 'new'">
-					<label>post_id</label> 
-					<input type="text"
-						class="form-control" value="Auto Generated" readonly> <br>
-					<label>post_title</label> 
-					<input type="text" class="form-control" 
-						ng-model="newEntry.post_title">
+					<label class="desc">Content</label> 
+					<textarea rows="7" cols="50" class="form-control" 
+						ng-model="newpost_entry.post_content"></textarea>
 					<br>
-					<label>post_description</label> 
+					<label>By</label> 
 					<input type="text" class="form-control" 
-						ng-model="newEntry.post_description">
+						ng-model="newpost_entry.post_by">
 					<br>
-					<label>post_thread</label> 
+					<label>Thread</label>
 					<input type="text" class="form-control" 
-						ng-model="newEntry.post_thread">
-					<br>
-					<label>post_category</label> 
-					<input type="text" class="form-control" 
-						ng-model="newEntry.post_category">
-					<br>
-					<label>post_date_created</label> 
-					<input type="text" class="form-control" 
-						ng-model="newEntry.post_date_created">
+						ng-model="newpost_entry.post_thread">
 					<br>
 				</div>
 				<div ng-show="operation == 'update'">
-					<label>post_id</label>
-					<input type="text" class="form-control" 
-						ng-model="selectedEntry.post_id" readonly>
-					<br> 
-					<label>post_title</label> 
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_title"> 
+					<label class="desc">Content</label> 
+					<textarea rows="7" cols="50" class="form-control" 
+						ng-model="selectedpost_entry.post_content"></textarea>
 					<br>
-					<label>post_description</label> 
+					<label>By</label> 
 					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_description"> 
+						ng-model="selectedpost_entry.post_by"> 
 					<br>
-					<label>post_thread</label> 
+					<label>Thread</label> 
 					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_thread"> 
-					<br>
-					<label>post_category</label> 
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_category"> 
-					<br>
-					<label>post_date_created</label> 
-					<input type="text" class="form-control"
-						ng-model="selectedEntry.post_date_created"> 
+						ng-model="selectedpost_entry.post_thread"> 
 					<br>
 				</div>
 				<div class="btn-group">
 					<input class="btn btn-primary" type="button" value="Save" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="confirmAction()"> 
-					<input class="btn btn-default" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
+					<input class="btn btn-danger" type="button" value="Cancel" ng-show="operation == 'new' || operation == 'update'"
 						ng-click="cancelAction()">
 				</div>
 			</div>
@@ -152,7 +203,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular-resource.min.js"></script>
 
 	<script type="text/javascript">
-		function ManageController($scope, $http){
+		function ManageControllerPosts($scope, $http){
 			
 			var url = '/dirigible/js/Forum/forum_posts.js';
 			
@@ -161,24 +212,24 @@
 				$scope.data = data;
 			});
 			
-			$scope.selectedEntry;
+			$scope.selectedpost_entry;
             $scope.operation = 'show';
-            $scope.newEntry = null;
+            $scope.newpost_entry = null;
             $scope.errorMessage = null;
 			
-			$scope.showInfoForEntry = function(entry) {
+			$scope.showInfoForpost_entry = function(post_entry) {
 				if($scope.operation==='show'){
-					if($scope.selectedEntry === entry){
-						$scope.showEntry = false;
-						$scope.selectedEntry = null;
-						entry._selected_ = false;
+					if($scope.selectedpost_entry === post_entry){
+						$scope.showpost_entry = false;
+						$scope.selectedpost_entry = null;
+						post_entry._selected_ = false;
 					}else{
 						for(var i = 0 ; i < $scope.data.length; i ++){
 							$scope.data[i]._selected_ = false;
 						}
-						entry._selected_ = true;
-						$scope.showEntry = true;
-						$scope.selectedEntry = entry;
+						post_entry._selected_ = true;
+						$scope.showpost_entry = true;
+						$scope.selectedpost_entry = post_entry;
 					}
 				}
 			}
@@ -194,10 +245,10 @@
                               break;
                           case 'update':
                                if($scope.operation != 'update'){
-                              	 if($scope.selectedEntry){
+                              	 if($scope.selectedpost_entry){
                                        $scope.operation = 'update';
                                    }else{
-                                       alert("Please first select entry for updated");
+                                       alert("Please first select post_entry for updated");
                                        $scope.operation = 'show';
                                    }
                               }else{
@@ -222,10 +273,10 @@
                     case 'show':
                         break;
                     case 'new':
-                        newEntry($scope.newEntry);
+                        newpost_entry($scope.newpost_entry);
                         break;
                     case 'update':
-                        updateEntry($scope.selectedEntry);
+                        updatepost_entry($scope.selectedpost_entry);
                         break;
                 }
             }
@@ -235,11 +286,11 @@
             }
 
            $scope.delete = function(){
-        	   if($scope.selectedEntry){
-                 	var confirmed = confirm('Do you realy want to delete the selected entry?');
+        	   if($scope.selectedpost_entry){
+                 	var confirmed = confirm('Do you realy want to delete the selected post_entry?');
                	if(confirmed){
-                   	delete $scope.selectedEntry._selected_;
-                       deleteEntry($scope.selectedEntry);
+                   	delete $scope.selectedpost_entry._selected_;
+                       deletepost_entry($scope.selectedpost_entry);
                        $scope.operation = 'show';
                	}                    	
                }else{
@@ -247,14 +298,14 @@
                }
            }
                     
-			function newEntry(entry){
-				delete $scope.newEntry._selected_;
-				$http.post(url, entry)
+			function newpost_entry(post_entry){
+				delete $scope.newpost_entry._selected_;
+				$http.post(url, post_entry)
 				.success(function(){
 					refreshData();
-					$scope.selectedEntry = null;
+					$scope.selectedpost_entry = null;
                     $scope.operation = 'show';
-                    $scope.newEntry = null;
+                    $scope.newpost_entry = null;
                     $scope.errorMessage = null;
 				})
 				.error(function(response){
@@ -262,9 +313,9 @@
 				});
 			}
 			
-			function updateEntry(entry){
-				delete $scope.selectedEntry._selected_;
-				$http.put(url, entry)
+			function updatepost_entry(post_entry){
+				delete $scope.selectedpost_entry._selected_;
+				$http.put(url, post_entry)
 				.success(function(){
 					refreshData();
                     $scope.operation = 'show';
@@ -275,14 +326,14 @@
 				});
 			}
 					
-			function deleteEntry(entry){
+			function deletepost_entry(post_entry){
 				var primaryKey;
 				primaryKey = "post_id";
-				var deleteUrl = url+"?"+primaryKey+"="+entry[primaryKey];
+				var deleteUrl = url+"?"+primaryKey+"="+post_entry[primaryKey];
 				$http.delete(deleteUrl)
 				.success(function(){
 					refreshData();
-                    $scope.selectedEntry = null;
+                    $scope.selectedpost_entry = null;
 					$scope.errorMessage = null;
 				})
 				.error(function(response){
@@ -294,8 +345,8 @@
 				$http.get(url)
 				.success(function(data){
 					$scope.data = data;
-                	$scope.newEntry = null;
-                    $scope.selectedEntry = null;
+                	$scope.newpost_entry = null;
+                    $scope.selectedpost_entry = null;
                     $scope.operation = 'show';
                     $scope.errorMessage = null;
 				})
@@ -303,6 +354,310 @@
 					$scope.errorMessage = response.err.message;
 				});
 			}
+		}
+        
+        function ManageControllerCategories($scope, $http) {
+            var url = '/dirigible/js/Forum/forum_categories.js';
+            
+			$http.get(url)
+			.success(function(data){
+				$scope.data = data;
+			});
+			
+			$scope.selectedcategory_entry;
+            $scope.operation = 'show';
+            $scope.newcategory_entry = null;
+            $scope.errorMessage = null;
+			
+			$scope.showInfoForcategory_entry = function(category_entry) {
+				if($scope.operation==='show'){
+					if($scope.selectedcategory_entry === category_entry){
+						$scope.showcategory_entry = false;
+						$scope.selectedcategory_entry = null;
+						category_entry._selected_ = false;
+					}else{
+						for(var i = 0 ; i < $scope.data.length; i ++){
+							$scope.data[i]._selected_ = false;
+						}
+						category_entry._selected_ = true;
+						$scope.showcategory_entry = true;
+						$scope.selectedcategory_entry = category_entry;
+					}
+				}
+			}
+					
+			$scope.setOperation = function(operation){
+                      switch(operation){
+                          case 'new':
+                              if($scope.operation != 'new'){
+                                  $scope.operation = 'new';
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          case 'update':
+                               if($scope.operation != 'update'){
+                              	 if($scope.selectedcategory_entry){
+                                       $scope.operation = 'update';
+                                   }else{
+                                       alert("Please first select category_entry for updated");
+                                       $scope.operation = 'show';
+                                   }
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          case 'delete':
+                              if($scope.operation != 'delete'){
+                                  $scope.operation = 'delete';
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          default:
+                              $scope.operation = 'show';
+                              break;
+                       }
+            }
+                    
+            $scope.confirmAction = function(){
+                switch($scope.operation){
+                    case 'show':
+                        break;
+                    case 'new':
+                        newcategory_entry($scope.newcategory_entry);
+                        break;
+                    case 'update':
+                        updatecategory_entry($scope.selectedcategory_entry);
+                        break;
+                }
+            }
+
+            $scope.cancelAction = function(){
+                refreshData();
+            }
+
+           $scope.delete = function(){
+        	   if($scope.selectedcategory_entry){
+                 	var confirmed = confirm('Do you realy want to delete the selected category_entry?');
+               	if(confirmed){
+                   	delete $scope.selectedcategory_entry._selected_;
+                       deletecategory_entry($scope.selectedcategory_entry);
+                       $scope.operation = 'show';
+               	}                    	
+               }else{
+                   alert('Please select row from the table.');
+               }
+           }
+                    
+			function newcategory_entry(category_entry){
+				delete $scope.newcategory_entry._selected_;
+				$http.post(url, category_entry)
+				.success(function(){
+					refreshData();
+					$scope.selectedcategory_entry = null;
+                    $scope.operation = 'show';
+                    $scope.newcategory_entry = null;
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}
+			
+			function updatecategory_entry(category_category_entry){
+				delete $scope.selectedcategory_entry._selected_;
+				$http.put(url, category_entry)
+				.success(function(){
+					refreshData();
+                    $scope.operation = 'show';
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}
+					
+			function deletecategory_entry(category_entry){
+				var primaryKey;
+				primaryKey = "category_id";
+				var deleteUrl = url+"?"+primaryKey+"="+category_entry[primaryKey];
+				$http.delete(deleteUrl)
+				.success(function(){
+					refreshData();
+                    $scope.selectedcategory_entry = null;
+					$scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				})
+			}
+                    
+			function refreshData(){
+				$http.get(url)
+				.success(function(data){
+					$scope.data = data;
+                	$scope.newcategory_entry = null;
+                    $scope.selectedcategory_entry = null;
+                    $scope.operation = 'show';
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}
+        }
+            function ManageControllerThreads($scope, $http){
+			
+			var url = '/dirigible/js/Forum/forum_threads.js';
+			
+			$http.get(url)
+			.success(function(data){
+				$scope.data = data;
+			});
+			
+			$scope.selectedthread_entry;
+            $scope.operation = 'show';
+            $scope.newthread_entry = null;
+            $scope.errorMessage = null;
+			
+			$scope.showInfoForthread_entry = function(thread_entry) {
+				if($scope.operation==='show'){
+					if($scope.selectedthread_entry === thread_entry){
+						$scope.showthread_entry = false;
+						$scope.selectedthread_entry = null;
+						thread_entry._selected_ = false;
+					}else{
+						for(var i = 0 ; i < $scope.data.length; i ++){
+							$scope.data[i]._selected_ = false;
+						}
+						thread_entry._selected_ = true;
+						$scope.showthread_entry = true;
+						$scope.selectedthread_entry = thread_entry;
+					}
+				}
+			}
+					
+			$scope.setOperation = function(operation){
+                      switch(operation){
+                          case 'new':
+                              if($scope.operation != 'new'){
+                                  $scope.operation = 'new';
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          case 'update':
+                               if($scope.operation != 'update'){
+                              	 if($scope.selectedthread_entry){
+                                       $scope.operation = 'update';
+                                   }else{
+                                       alert("Please first select thread_entry for updated");
+                                       $scope.operation = 'show';
+                                   }
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          case 'delete':
+                              if($scope.operation != 'delete'){
+                                  $scope.operation = 'delete';
+                              }else{
+                                  $scope.operation = 'show';
+                              }
+                              break;
+                          default:
+                              $scope.operation = 'show';
+                              break;
+                       }
+            }
+                    
+            $scope.confirmAction = function(){
+                switch($scope.operation){
+                    case 'show':
+                        break;
+                    case 'new':
+                        newthread_entry($scope.newthread_entry);
+                        break;
+                    case 'update':
+                        updatethread_entry($scope.selectedthread_entry);
+                        break;
+                }
+            }
+
+            $scope.cancelAction = function(){
+                refreshData();
+            }
+
+           $scope.delete = function(){
+        	   if($scope.selectedthread_entry){
+                 	var confirmed = confirm('Do you realy want to delete the selected thread_entry?');
+               	if(confirmed){
+                   	delete $scope.selectedthread_entry._selected_;
+                       deletethread_entry($scope.selectedthread_entry);
+                       $scope.operation = 'show';
+               	}                    	
+               }else{
+                   alert('Please select row from the table.');
+               }
+           }
+                    
+			function newthread_entry(thread_entry){
+				delete $scope.newthread_entry._selected_;
+				$http.post(url, thread_entry)
+				.success(function(){
+					refreshData();
+					$scope.selectedthread_entry = null;
+                    $scope.operation = 'show';
+                    $scope.newthread_entry = null;
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}
+			
+			function updatethread_entry(thread_entry){
+				delete $scope.selectedthread_entry._selected_;
+				$http.put(url, thread_entry)
+				.success(function(){
+					refreshData();
+                    $scope.operation = 'show';
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}
+					
+			function deletethread_entry(thread_entry){
+				var primaryKey;
+				primaryKey = "thread_id";
+				var deleteUrl = url+"?"+primaryKey+"="+thread_entry[primaryKey];
+				$http.delete(deleteUrl)
+				.success(function(){
+					refreshData();
+                    $scope.selectedthread_entry = null;
+					$scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				})
+			}
+                    
+			function refreshData(){
+				$http.get(url)
+				.success(function(data){
+					$scope.data = data;
+                	$scope.newthread_entry = null;
+                    $scope.selectedthread_entry = null;
+                    $scope.operation = 'show';
+                    $scope.errorMessage = null;
+				})
+				.error(function(response){
+					$scope.errorMessage = response.err.message;
+				});
+			}    
 		}
 	</script>
 </body>

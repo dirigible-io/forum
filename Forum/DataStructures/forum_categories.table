@@ -23,15 +23,15 @@
       {
         "name":"CATEGORY_DESCRIPTION",
         "type":"VARCHAR",
-        "length":"255",
+        "length":"512",
         "notNull":"true",
         "primaryKey":"false",
         "defaultValue":""
       }
       ,
       {
-        "name":"CATEGORY_DATE_CREATED",
-        "type":"DATE",
+        "name":"CATEGORY_DATE_ADDED",
+        "type":"TIMESTAMP",
         "length":"0",
         "notNull":"true",
         "primaryKey":"false",
