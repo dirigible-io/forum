@@ -110,7 +110,7 @@ label {
             <div ng-controller="ManageControllerCategories">
         	<div class="col-sm-3 blog-sidebar">
                 <div class="sidebar-module">
-                    <h4><a href="https://dirigiblep1940736303trial.hanatrial.ondemand.com/dirigible/web-sandbox/Forum/forum_categories.html">Categories</a></h4>
+                    <h4><a href="forum_categories.html">Categories</a></h4>
                      <ol class="list-unstyled">
                      <li class="selected-{{category_entry._selected_}}" ng-repeat="category_entry in data"
         				ng-click="showInfoForcategory_entry(category_entry)"><a href="#">{{category_entry.category_title}}</a></li>
@@ -121,7 +121,7 @@ label {
             <div ng-controller="ManageControllerThreads">
             <div class="col-sm-3 blog-sidebar-threads">
                 <div class="sidebar-module">
-                    <h4><a href="https://dirigiblep1940736303trial.hanatrial.ondemand.com/dirigible/web-sandbox/Forum/forum_threads.html">Threads</a></h4>
+                    <h4><a href="forum_threads.html">Threads</a></h4>
                      <ol class="list-unstyled">
                      <li class="selected-{{thread_entry._selected_}}" ng-repeat="thread_entry in data"
             			ng-click="showInfoForthread_entry(thread_entry)"><a href="#">{{thread_entry.thread_title}}</a></li>
@@ -205,7 +205,7 @@ label {
 	<script type="text/javascript">
 		function ManageControllerPosts($scope, $http){
 			
-			var url = '/dirigible/js/Forum/forum_posts.js';
+			var url = '/dirigible/services/js/Forum/forum_posts.js';
 			
 			$http.get(url)
 			.success(function(data){
@@ -357,7 +357,7 @@ label {
 		}
         
         function ManageControllerCategories($scope, $http) {
-            var url = '/dirigible/js/Forum/forum_categories.js';
+            var url = '/dirigible/services/js/Forum/forum_categories.js';
             
 			$http.get(url)
 			.success(function(data){
@@ -509,7 +509,7 @@ label {
         }
             function ManageControllerThreads($scope, $http){
 			
-			var url = '/dirigible/js/Forum/forum_threads.js';
+			var url = '/dirigible/services/js/Forum/forum_threads.js';
 			
 			$http.get(url)
 			.success(function(data){
